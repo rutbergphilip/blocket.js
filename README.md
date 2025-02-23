@@ -53,7 +53,7 @@ Customize the package behavior with the global configuration. This allows you to
 import client, { configure } from 'blocket.js';
 
 configure({
-  apiBaseUrl: 'https://api.blocket.se/v1', // API base URL (default)
+  apiBaseUrl: 'https://api.blocket.se/search_bff/v2/content', // API base URL (default)
   tokenEndpoint:
     'https://www.blocket.se/api/adout-api-route/refresh-token-and-validate-session', // Token endpoint
   logLevel: 'debug', // Options: 'none', 'error', 'info', 'debug'
