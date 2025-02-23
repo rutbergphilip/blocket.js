@@ -107,3 +107,11 @@ Searches for ads on Blocket based on the provided query parameters.
     - `include` (string, optional): Additional filters or fields to include (e.g., 'image,description').
   - `fetchOptions` (optional): Additional options to pass to the underlying fetch request.
 - Returns: A promise that resolves to an array of `BlocketAd` objects.
+
+## License
+
+This project is licensed under a license that allows free use provided that proper credit is given to the original author, Philip Rutberg. See the LICENSE file for details.
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=rutbergphilip/blocket.js&type=Date)](https://star-history.com/#rutbergphilip/blocket.js&Date)
