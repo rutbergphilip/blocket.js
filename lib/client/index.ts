@@ -1,5 +1,5 @@
 import { apiRequest } from './request';
-import { getConfig } from '../config';
+import { getBaseConfig, createQueryConfig } from '../config';
 
 import type { FetchOptions } from 'ofetch';
 import type { BlocketQueryParams, BlocketAd, BlocketResponse } from '../types';
@@ -31,9 +31,10 @@ export async function find(
   query: BlocketQueryParams,
   fetchOptions?: FetchOptions<'json', any>
 ): Promise<BlocketAd[]> {
-  const config = getConfig();
+  const config = getBaseConfig();
+  const queryConfig = createQueryConfig(query);
   const response = await apiRequest<BlocketResponse>(config.apiBaseUrl, {
-    query: remapQueryParams(query),
+    query: remapQueryParams(queryConfig),
     ...fetchOptions,
   });
 
@@ -56,7 +57,7 @@ async function getAd(
   adId: string,
   fetchOptions?: FetchOptions<'json', any>
 ): Promise<BlocketAd> {
-  const config = getConfig();
+  const config = getBaseConfig();
   const url = `${config.apiBaseUrl}/ad/${adId}`;
 
   return await apiRequest<BlocketAd>(url, fetchOptions);

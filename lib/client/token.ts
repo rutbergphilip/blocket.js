@@ -1,6 +1,6 @@
 import { ofetch } from 'ofetch';
 
-import { getConfig, logger } from '../config';
+import { getBaseConfig, logger } from '../config';
 
 import type { BlocketAccessToken } from '../types';
 
@@ -32,7 +32,7 @@ export const fetchToken = async (
 
   logger('debug', 'Fetching new Blocket API token.');
 
-  const config = getConfig();
+  const config = getBaseConfig();
 
   const tokenData = await ofetch<BlocketAccessToken>(config.tokenEndpoint);
   if (!tokenData || !tokenData.bearerToken) {

@@ -1,5 +1,5 @@
 /**
- * Configuration interface.
+ * Blocket.js Global Configuration interface.
  */
 export interface BlocketConfig {
   /**
@@ -26,7 +26,7 @@ export interface BlocketConfig {
 }
 
 /**
- * Default configuration.
+ * Default global configuration.
  */
 export const defaultConfig: BlocketConfig = {
   apiBaseUrl: 'https://api.blocket.se/search_bff/v2/content',
@@ -50,7 +50,7 @@ export const configure = (config: Partial<BlocketConfig>): void => {
  * Get the current configuration.
  * @returns The current Blocket.js configuration.
  */
-export const getConfig = (): BlocketConfig => currentConfig;
+export const getBaseConfig = (): BlocketConfig => currentConfig;
 
 /**
  * Simple logger function based on log level.
@@ -62,7 +62,72 @@ export const logger = (
   message: string
 ): void => {
   const levels = { none: 0, error: 1, info: 2, debug: 3 };
-  if (levels[getConfig().logLevel] >= levels[level]) {
+  if (levels[getBaseConfig().logLevel] >= levels[level]) {
     console[level === 'error' ? 'error' : 'log'](message);
   }
+};
+
+/**
+ * Blocket Query Configuration interface.
+ * The only required property is the query string.
+ */
+export interface BlocketQueryConfig {
+  /**
+   * The search query string.
+   */
+  query: string;
+  /**
+   * The maximum number of results to return.
+   * @default 100
+   */
+  limit?: number;
+  /**
+   * The sorting order of the results.
+   * @default 'rel'
+   */
+  sort?: 'rel';
+  /**
+   * The type of listing to search for. 's' for selling, 'b' for buying.
+   * @default 's'
+   */
+  listingType?: 's' | 'b';
+  /**
+   * The status of the ad.
+   * @default 'active'
+   */
+  status?: 'active' | 'inactive' | string;
+  /**
+   * The maximum distance in kilometers from the search location.
+   * @default 3
+   */
+  gl?: number;
+  /**
+   * Additional filters or fields to include in the response.
+   * @default 'extend_with_shipping'
+   */
+  include?: string;
+}
+
+/**
+ * Default query configuration (excluding the required query string).
+ */
+export const defaultQueryConfig: Omit<BlocketQueryConfig, 'query'> = {
+  limit: 100,
+  sort: 'rel',
+  listingType: 's',
+  status: 'active',
+  gl: 3,
+  include: 'extend_with_shipping',
+};
+
+/**
+ * Merges the provided query configuration with default values.
+ * @param queryConfig Partial query configuration that must include the query string.
+ * @returns A complete BlocketQueryConfig object.
+ */
+export const createQueryConfig = (
+  queryConfig: Pick<BlocketQueryConfig, 'query'> &
+    Partial<Omit<BlocketQueryConfig, 'query'>>
+): BlocketQueryConfig => {
+  return { ...defaultQueryConfig, ...queryConfig };
 };

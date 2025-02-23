@@ -1,7 +1,7 @@
 import { ofetch, type FetchOptions } from 'ofetch';
 
 import { fetchToken, setCachedToken } from './token';
-import { getConfig, logger } from '../config';
+import { getBaseConfig, logger } from '../config';
 
 /**
  * Make an API request with automatic token handling and retry on 401 errors.
@@ -15,7 +15,7 @@ export async function apiRequest<T>(
   options: FetchOptions<'json', any> = {},
   retryCount: number = 0
 ): Promise<T> {
-  const config = getConfig();
+  const config = getBaseConfig();
   const token = await fetchToken();
 
   try {
