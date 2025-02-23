@@ -16,6 +16,5 @@
     }
   },
   "include": ["lib"],
-  "references": [],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }
