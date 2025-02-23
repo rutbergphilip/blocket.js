@@ -4,7 +4,7 @@
 export interface BlocketConfig {
   /**
    * Base URL for the Blocket API.
-   * @default 'https://api.blocket.se/v1'
+   * @default 'https://api.blocket.se/search_bff/v2/content'
    */
   apiBaseUrl: string;
   /**
@@ -29,7 +29,7 @@ export interface BlocketConfig {
  * Default configuration.
  */
 export const defaultConfig: BlocketConfig = {
-  apiBaseUrl: 'https://api.blocket.se/v1',
+  apiBaseUrl: 'https://api.blocket.se/search_bff/v2/content',
   tokenEndpoint:
     'https://www.blocket.se/api/adout-api-route/refresh-token-and-validate-session',
   logLevel: 'error',
