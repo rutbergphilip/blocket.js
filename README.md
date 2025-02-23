@@ -4,7 +4,7 @@ blocket.js is a lightweight and easy-to-use npm package that provides a TypeScri
 
 ## Features
 
-- **Simple API**: Import the client and call methods like `find` and `getAd` directly.
+- **Simple API**: Import the client and call methods like `find` directly.
 - **Automatic Token Management**: Handles token retrieval, caching, and refreshing automatically when a token expires (detected via 401 errors).
 - **Configurable**: Global and per-request configuration options let you override API endpoints, logging preferences, retry attempts, and more.
 - **TypeScript Support**: Fully typed interfaces for query parameters, API responses, and advertisements.
