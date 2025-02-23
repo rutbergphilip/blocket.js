@@ -13,6 +13,7 @@
   "author": "Philip Rutberg <philiprutberg00@gmail.com> (https://philiprutberg.com/)",
   "homepage": "https://github.com/rutbergphilip/blocket.js#readme",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "directories": {
     "lib": "lib"
   },
