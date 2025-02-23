@@ -52,7 +52,7 @@ export async function find(
  * @param fetchOptions Additional fetch options.
  * @returns Blocket ad details.
  */
-export async function getAd(
+async function getAd(
   adId: string,
   fetchOptions?: FetchOptions<'json', any>
 ): Promise<BlocketAd> {
