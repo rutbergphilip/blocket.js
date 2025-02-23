@@ -33,10 +33,14 @@
   "bugs": {
     "url": "https://github.com/rutbergphilip/blocket.js/issues"
   },
+  "pre-push": [
+    "build"
+  ],
   "dependencies": {
     "ofetch": "^1.4.1"
   },
   "devDependencies": {
+    "pre-push": "^0.1.4",
     "typescript": "^5.7.3"
   }
 }
