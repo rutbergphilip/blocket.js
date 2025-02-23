@@ -1,8 +1,8 @@
 import { apiRequest } from './request';
-import { getConfig } from '@/config';
+import { getConfig } from '../config';
 
 import type { FetchOptions } from 'ofetch';
-import type { BlocketQueryParams, BlocketAd, BlocketResponse } from '@/types';
+import type { BlocketQueryParams, BlocketAd, BlocketResponse } from '../types';
 
 /**
  * Remap BlocketQueryParams to API query parameters.

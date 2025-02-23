@@ -1,7 +1,7 @@
 import { ofetch, type FetchOptions } from 'ofetch';
 
 import { fetchToken, setCachedToken } from './token';
-import { getConfig, logger } from '@/config';
+import { getConfig, logger } from '../config';
 
 /**
  * Make an API request with automatic token handling and retry on 401 errors.

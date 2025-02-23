@@ -1,7 +1,8 @@
 import { ofetch } from 'ofetch';
-import { getConfig, logger } from '@/config';
 
-import type { BlocketAccessToken } from '@/types';
+import { getConfig, logger } from '../config';
+
+import type { BlocketAccessToken } from '../types';
 
 let cachedToken: string | null = null;
 
