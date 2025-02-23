@@ -1,0 +1,43 @@
+{
+  "name": "blocket.js",
+  "version": "1.0.0",
+  "description": "A user-friendly js wrapper for blocket.se",
+  "keywords": [
+    "blocket",
+    "javascript",
+    "api",
+    "wrapper",
+    "blocket.js"
+  ],
+  "license": "MIT",
+  "author": "Philip Rutberg <philiprutberg00@gmail.com> (https://philiprutberg.com/)",
+  "homepage": "https://github.com/rutbergphilip/blocket.js#readme",
+  "main": "dist/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rutbergphilip/blocket.js.git"
+  },
+  "scripts": {
+    "test": "node ./__tests__/index.test.ts",
+    "build": "tsc"
+  },
+  "bugs": {
+    "url": "https://github.com/rutbergphilip/blocket.js/issues"
+  },
+  "dependencies": {
+    "ofetch": "^1.4.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}
