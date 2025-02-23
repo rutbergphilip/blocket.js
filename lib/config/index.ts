@@ -78,7 +78,8 @@ export interface BlocketQueryConfig {
   query: string;
   /**
    * The maximum number of results to return.
-   * @default 100
+   * @default 60
+   * @max 60
    */
   limit?: number;
   /**
@@ -112,7 +113,7 @@ export interface BlocketQueryConfig {
  * Default query configuration (excluding the required query string).
  */
 export const defaultQueryConfig: Omit<BlocketQueryConfig, 'query'> = {
-  limit: 100,
+  limit: 60,
   sort: 'rel',
   listingType: 's',
   status: 'active',
