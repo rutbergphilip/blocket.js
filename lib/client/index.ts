@@ -33,6 +33,7 @@ export async function find(
 ): Promise<BlocketAd[]> {
   const config = getBaseConfig();
   const queryConfig = createQueryConfig(query);
+
   const response = await apiRequest<BlocketResponse>(config.apiBaseUrl, {
     query: remapQueryParams(queryConfig),
     ...fetchOptions,
