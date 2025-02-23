@@ -1,5 +1,4 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "rootDir": "lib",
     "outDir": "dist",
@@ -10,5 +9,5 @@
   },
   "include": ["lib"],
   "references": [],
-  "exclude": ["node_modules", "**/*.spec.ts", "__tests__"]
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }

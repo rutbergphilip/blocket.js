@@ -14,8 +14,7 @@
   "homepage": "https://github.com/rutbergphilip/blocket.js#readme",
   "main": "dist/index.js",
   "directories": {
-    "lib": "lib",
-    "test": "__tests__"
+    "lib": "lib"
   },
   "files": [
     "lib"
@@ -28,7 +27,7 @@
     "url": "git+https://github.com/rutbergphilip/blocket.js.git"
   },
   "scripts": {
-    "test": "node ./__tests__/index.test.ts",
+    "test": "echo \"Error: no test yet\" && exit 1",
     "build": "tsc"
   },
   "bugs": {
