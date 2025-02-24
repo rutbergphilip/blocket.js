@@ -5,7 +5,8 @@ import type { FetchOptions } from 'ofetch';
 import type {
   BlocketQueryParamsNative,
   BlocketAd,
-  BlocketResponse,
+  BlocketAdResponse,
+  BlocketAdSearchResponse,
   BlocketQueryConfig,
 } from '../types';
 
@@ -59,10 +60,13 @@ export async function find(
   const config = getBaseConfig();
   const queryConfig = createQueryConfig(query);
 
-  const response = await apiRequest<BlocketResponse>(config.apiBaseUrl, {
-    query: remapQueryParams(queryConfig),
-    ...fetchOptions,
-  });
+  const response = await apiRequest<BlocketAdSearchResponse>(
+    config.apiBaseUrl,
+    {
+      query: remapQueryParams(queryConfig),
+      ...fetchOptions,
+    }
+  );
 
   if (!response || !response.data || !Array.isArray(response.data)) {
     throw new Error(
@@ -79,12 +83,18 @@ export async function find(
  * @param fetchOptions Additional fetch options.
  * @returns Blocket ad details.
  */
-async function getAd(
+async function findById(
   adId: string,
   fetchOptions?: FetchOptions<'json', any>
-): Promise<BlocketAd> {
+): Promise<BlocketAd | null> {
   const config = getBaseConfig();
-  const url = `${config.apiBaseUrl}/ad/${adId}`;
+  const url = `${config.apiBaseUrl}/${adId}`;
 
-  return await apiRequest<BlocketAd>(url, fetchOptions);
+  const ad = await apiRequest<BlocketAdResponse>(url, fetchOptions);
+
+  if (!ad || !ad?.data) {
+    return null;
+  }
+
+  return ad.data;
 }
