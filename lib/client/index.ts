@@ -11,21 +11,37 @@ import type {
 
 /**
  * Remap BlocketQueryConfig to API readable BlocketQueryParamsNative.
- * @param params Blocket query parameters.
- * @returns Remapped query parameters.
+ * @param params Blocket user readable query parameters.
+ * @returns Remapped API readable query parameters.
  */
 function remapQueryParams(
   params: BlocketQueryConfig
 ): BlocketQueryParamsNative {
-  return {
-    q: params.query,
-    lim: params.limit,
-    sort: params.sort,
-    st: params.listingType,
-    status: params.status,
-    gl: params.geolocation,
-    include: params.include,
-  } as BlocketQueryParamsNative;
+  const mapping: Record<
+    keyof BlocketQueryConfig,
+    keyof BlocketQueryParamsNative
+  > = {
+    query: 'q',
+    limit: 'lim',
+    sort: 'sort',
+    listingType: 'st',
+    status: 'status',
+    geolocation: 'gl',
+    include: 'include',
+  };
+
+  const remapped: Partial<BlocketQueryParamsNative> = {};
+
+  for (const key in params) {
+    if (mapping[key as keyof BlocketQueryConfig]) {
+      const newKey = mapping[key as keyof BlocketQueryConfig];
+      Object.assign(remapped, {
+        [newKey]: params[key as keyof BlocketQueryConfig],
+      });
+    }
+  }
+
+  return remapped as BlocketQueryParamsNative;
 }
 
 /**
@@ -38,6 +54,8 @@ export async function find(
   query: BlocketQueryConfig,
   fetchOptions?: FetchOptions<'json', any>
 ): Promise<BlocketAd[]> {
+  if (!query.query) throw new Error('Query string is required');
+
   const config = getBaseConfig();
   const queryConfig = createQueryConfig(query);
 
