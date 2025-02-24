@@ -12,8 +12,15 @@ export type BlocketAccessToken = {
 /**
  * Blocket API response containing an array of ads.
  */
-export interface BlocketResponse {
+export interface BlocketAdSearchResponse {
   data: BlocketAd[];
+}
+
+/**
+ * Blocket API response containing a single ad.
+ */
+export interface BlocketAdResponse {
+  data: BlocketAd;
 }
 
 /**
