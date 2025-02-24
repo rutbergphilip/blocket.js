@@ -1,0 +1,39 @@
+name: Auto Tag
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      - name: Get package version
+        id: get_version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "VERSION=$VERSION"
+          echo "::set-output name=version::$VERSION"
+
+      - name: Create Git tag if not exists
+        run: |
+          TAG="v${{ steps.get_version.outputs.version }}"
+          echo "Checking for tag $TAG"
+          git fetch --tags
+          if git tag --list | grep -q "^$TAG$"; then
+            echo "Tag $TAG already exists."
+          else
+            git tag "$TAG"
+            git push origin "$TAG"
+          fi
