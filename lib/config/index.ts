@@ -46,12 +46,8 @@ export const logger = (
  * Default query configuration (excluding the required query string).
  */
 export const defaultQueryConfig: Omit<BlocketQueryConfig, 'query'> = {
-  limit: 20,
-  sort: 'rel',
   listingType: 's',
   status: 'active',
-  geolocation: 3,
-  include: 'extend_with_shipping',
 };
 
 /**

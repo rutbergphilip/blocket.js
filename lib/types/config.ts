@@ -36,35 +36,33 @@ export interface BlocketQueryConfig {
   query: string;
   /**
    * The maximum number of results to return.
+   * Value is omitted by default but defaults to 20 by the API.
    * @default 20
    * @max 60
    */
   limit?: number;
   /**
    * The sorting order of the results.
-   * @default 'rel'
    */
   sort?: 'rel';
   /**
-   * The type of listing to search for. 's' for selling, 'b' for buying, 'a' for all.
+   * The type of listing to search for. `s` for selling, `b` for buying, `a` for all.
    * @default 's'
    */
   listingType?: 's' | 'b' | 'a';
   /**
-   * The status of the ad.
+   * The status of the ad. `active`, `inactive`, or `all`.
    * @default 'active'
    */
   status?: 'active' | 'inactive' | 'all';
   /**
    * The maximum distance in kilometers from the search location.
-   * @default 3
    */
   geolocation?: number;
   /**
    * Additional filters or fields to include in the response.
-   * @default 'extend_with_shipping'
    */
-  include?: string;
+  include?: 'extend_with_shipping' | string;
 }
 
 /**
