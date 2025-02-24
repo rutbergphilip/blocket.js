@@ -2,23 +2,30 @@ import { apiRequest } from './request';
 import { getBaseConfig, createQueryConfig } from '../config';
 
 import type { FetchOptions } from 'ofetch';
-import type { BlocketQueryParams, BlocketAd, BlocketResponse } from '../types';
+import type {
+  BlocketQueryParamsNative,
+  BlocketAd,
+  BlocketResponse,
+  BlocketQueryConfig,
+} from '../types';
 
 /**
- * Remap BlocketQueryParams to API query parameters.
+ * Remap BlocketQueryConfig to API readable BlocketQueryParamsNative.
  * @param params Blocket query parameters.
  * @returns Remapped query parameters.
  */
-function remapQueryParams(params: BlocketQueryParams): Record<string, any> {
+function remapQueryParams(
+  params: BlocketQueryConfig
+): BlocketQueryParamsNative {
   return {
     q: params.query,
     lim: params.limit,
     sort: params.sort,
     st: params.listingType,
     status: params.status,
-    gl: params.gl,
+    gl: params.geolocation,
     include: params.include,
-  };
+  } as BlocketQueryParamsNative;
 }
 
 /**
@@ -28,7 +35,7 @@ function remapQueryParams(params: BlocketQueryParams): Record<string, any> {
  * @returns Array of Blocket ads.
  */
 export async function find(
-  query: BlocketQueryParams,
+  query: BlocketQueryConfig,
   fetchOptions?: FetchOptions<'json', any>
 ): Promise<BlocketAd[]> {
   const config = getBaseConfig();

@@ -1,3 +1,5 @@
+export * from './config';
+
 /**
  * Access token.
  */
@@ -54,50 +56,4 @@ export interface BlocketAd {
   subject: string;
   type: string;
   zipcode: string;
-}
-
-/**
- * Parameters for querying Blocket ads.
- */
-export interface BlocketQueryParams {
-  /**
-   * The search query.
-   * @example 'macbook air'
-   */
-  query: string;
-  /**
-   * The maximum number of results to return.
-   * @example 10
-   * @default 60
-   */
-  limit?: number;
-  /**
-   * The sorting order of the results.
-   * @example 'rel'
-   * @default 'rel'
-   */
-  sort?: 'rel';
-  /**
-   * The type of listing to search for. 's' for selling, 'b' for buying.
-   * @example 's'
-   * @default 's'
-   * @options 's' | 'b'
-   */
-  listingType?: 's' | 'b';
-  /**
-   * The status of the ad.
-   * @example 'active'
-   * @default 'active'
-   */
-  status?: 'active' | 'inactive' | string;
-  /**
-   * The maximum distance in kilometers from the search location.
-   * @example 10
-   */
-  gl?: number;
-  /**
-   * Additional filters or fields to include in the response.
-   * @example 'image,description'
-   */
-  include?: string;
 }
