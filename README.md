@@ -2,6 +2,11 @@
 
 blocket.js is a lightweight and easy-to-use npm package that provides a TypeScript interface to the unofficial Blocket API. It allows you to search and retrieve ads from blocket.se with automatic token management and error handling, so you can focus on building your application without worrying about the underlying API token management.
 
+![NPM Version](https://img.shields.io/npm/v/blocket.js)
+![NPM Downloads](https://img.shields.io/npm/dm/blocket.js)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/rutbergphilip/blocket.js/publish.yaml)
+![NPM Unpacked Size](https://img.shields.io/npm/unpacked-size/blocket.js)
+
 ## Features
 
 - **Simple API**: Import the client and call methods like `find` directly.
