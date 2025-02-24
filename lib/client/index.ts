@@ -2,23 +2,46 @@ import { apiRequest } from './request';
 import { getBaseConfig, createQueryConfig } from '../config';
 
 import type { FetchOptions } from 'ofetch';
-import type { BlocketQueryParams, BlocketAd, BlocketResponse } from '../types';
+import type {
+  BlocketQueryParamsNative,
+  BlocketAd,
+  BlocketResponse,
+  BlocketQueryConfig,
+} from '../types';
 
 /**
- * Remap BlocketQueryParams to API query parameters.
- * @param params Blocket query parameters.
- * @returns Remapped query parameters.
+ * Remap BlocketQueryConfig to API readable BlocketQueryParamsNative.
+ * @param params Blocket user readable query parameters.
+ * @returns Remapped API readable query parameters.
  */
-function remapQueryParams(params: BlocketQueryParams): Record<string, any> {
-  return {
-    q: params.query,
-    lim: params.limit,
-    sort: params.sort,
-    st: params.listingType,
-    status: params.status,
-    gl: params.gl,
-    include: params.include,
+function remapQueryParams(
+  params: BlocketQueryConfig
+): BlocketQueryParamsNative {
+  const mapping: Record<
+    keyof BlocketQueryConfig,
+    keyof BlocketQueryParamsNative
+  > = {
+    query: 'q',
+    limit: 'lim',
+    sort: 'sort',
+    listingType: 'st',
+    status: 'status',
+    geolocation: 'gl',
+    include: 'include',
   };
+
+  const remapped: Partial<BlocketQueryParamsNative> = {};
+
+  for (const key in params) {
+    if (mapping[key as keyof BlocketQueryConfig]) {
+      const newKey = mapping[key as keyof BlocketQueryConfig];
+      Object.assign(remapped, {
+        [newKey]: params[key as keyof BlocketQueryConfig],
+      });
+    }
+  }
+
+  return remapped as BlocketQueryParamsNative;
 }
 
 /**
@@ -28,9 +51,11 @@ function remapQueryParams(params: BlocketQueryParams): Record<string, any> {
  * @returns Array of Blocket ads.
  */
 export async function find(
-  query: BlocketQueryParams,
+  query: BlocketQueryConfig,
   fetchOptions?: FetchOptions<'json', any>
 ): Promise<BlocketAd[]> {
+  if (!query.query) throw new Error('Query string is required');
+
   const config = getBaseConfig();
   const queryConfig = createQueryConfig(query);
 
