@@ -81,9 +81,9 @@ export async function find(
  * Get details of a specific ad by its ID.
  * @param adId Advertisement ID.
  * @param fetchOptions Additional fetch options.
- * @returns Blocket ad details.
+ * @returns {Promise<BlocketAd | null>} Blocket ad details or null if not found.
  */
-async function findById(
+export async function findById(
   adId: string,
   fetchOptions?: FetchOptions<'json', any>
 ): Promise<BlocketAd | null> {
