@@ -97,14 +97,14 @@ import client from 'blocket.js';
 
 ## API Reference
 
-`client.find(query: BlocketQueryParams, fetchOptions?: FetchOptions<'json', any>): Promise<BlocketAd[]>`
+`client.find(query: BlocketQueryConfig, fetchOptions?: FetchOptions<'json', any>): Promise<BlocketAd[]>`
 
 Searches for ads on Blocket based on the provided query parameters.
 
 - Parameters:
-  - `query`: An object conforming to the `BlocketQueryParams` interface:
+  - `query`: An object conforming to the `BlocketQueryConfig` interface:
     - `query` (string): The search query (e.g., `'macbook air'`).
-    - `limit` (number, optional): Maximum number of results to return (default: 60).
+    - `limit` (number, optional): Maximum number of results to return (default: 20).
     - `sort` (string, optional): Sorting order (default: `'rel'`).
     - `listingType` (string, optional): Listing type; `'s'` for selling, `'b'` for buying (default: `'s'`).
     - `status` (string, optional): Ad status (`'active'` or `'inactive'`, default: `'active'`).
