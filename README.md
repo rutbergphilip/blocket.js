@@ -115,7 +115,9 @@ Searches for ads on Blocket based on the provided query parameters.
 
 ## License
 
-This project is licensed under a license that allows free use provided that proper credit is given to the original author, Philip Rutberg. See the LICENSE file for details.
+This project is licensed under the [MIT License](https://github.com/rutbergphilip/blocket.js/blob/main/LICENSE) – free for personal and commercial use.
+
+If you find this project useful, crediting the author is greatly appreciated!
 
 ## Star History
 
