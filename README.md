@@ -108,8 +108,8 @@ Searches for ads on Blocket based on the provided query parameters.
     - `sort` (string, optional): Sorting order (default: `'rel'`).
     - `listingType` (string, optional): Listing type; `'s'` for selling, `'b'` for buying (default: `'s'`).
     - `status` (string, optional): Ad status (`'active'` or `'inactive'`, default: `'active'`).
-    - `gl` (number, optional): Maximum distance in kilometers.
-    - `include` (string, optional): Additional filters or fields to include (e.g., 'image,description').
+    - `geolocation` (number, optional): Maximum distance in kilometers.
+    - `include` (string, optional): Additional filters or fields to include (e.g., 'extend_with_shipping').
   - `fetchOptions` (optional): Additional options to pass to the underlying fetch request.
 - Returns: A promise that resolves to an array of `BlocketAd` objects.
 
