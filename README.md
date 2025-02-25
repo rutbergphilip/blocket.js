@@ -97,7 +97,7 @@ import client from 'blocket.js';
 
 ## API Reference
 
-`client.find(query: BlocketQueryParams, fetchOptions?: FetchOptions): Promise<BlocketAd[]>`
+`client.find(query: BlocketQueryParams, fetchOptions?: FetchOptions<'json', any>): Promise<BlocketAd[]>`
 
 Searches for ads on Blocket based on the provided query parameters.
 
@@ -112,6 +112,15 @@ Searches for ads on Blocket based on the provided query parameters.
     - `include` (string, optional): Additional filters or fields to include (e.g., 'extend_with_shipping').
   - `fetchOptions` (optional): Additional options to pass to the underlying fetch request.
 - Returns: A promise that resolves to an array of `BlocketAd` objects.
+
+`client.findById(adId: string, fetchOptions?: FetchOptions<'json', any>): Promise<BlocketAd>`
+
+Retrieves a specific ad by its ID.
+
+- Parameters:
+  - `adId`: The ID of the ad to retrieve.
+  - `fetchOptions` (optional): Additional options to pass to the underlying fetch request.
+- Returns: A promise that resolves to a `BlocketAd` object or null if not found.
 
 ## License
 
