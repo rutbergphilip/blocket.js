@@ -54,7 +54,7 @@ export interface BlocketQueryConfig {
    * The status of the ad. `active`, `inactive`, or `all`.
    * @default 'active'
    */
-  status?: 'active' | 'inactive' | 'all';
+  status?: 'active' | 'deleted' | 'hidden_by_user';
   /**
    * The maximum distance in kilometers from the search location.
    */
@@ -73,7 +73,7 @@ export interface BlocketQueryParamsNative {
   lim?: number;
   sort?: 'rel';
   st?: 's' | 'b' | 'a';
-  status?: 'active' | 'inactive' | 'all';
+  status?: 'active' | 'deleted' | 'hidden_by_user';
   gl?: number;
   include?: string;
 }
