@@ -126,8 +126,4 @@ Retrieves a specific ad by its ID.
 
 This project is licensed under the [MIT License](https://github.com/rutbergphilip/blocket.js/blob/main/LICENSE) – free for personal and commercial use.
 
-If you find this project useful, crediting the author is greatly appreciated!
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=rutbergphilip/blocket.js&type=Date)](https://star-history.com/#rutbergphilip/blocket.js&Date)
+If you find this project useful, crediting the author and contributing to the project is greatly appreciated!
