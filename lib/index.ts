@@ -5,4 +5,5 @@ import { configure } from './config';
 export { configure };
 
 import type { BlocketQueryConfig } from './types/config';
-export type { BlocketQueryConfig };
+import type { BlocketAd } from './types';
+export type { BlocketQueryConfig, BlocketAd };
