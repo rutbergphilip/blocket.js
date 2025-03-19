@@ -6,8 +6,8 @@ import type {
   BlocketQueryParamsNative,
   BlocketAd,
   BlocketAdResponse,
-  BlocketAdSearchResponse,
   BlocketQueryConfig,
+  BlocketApiResponse,
 } from '../types';
 
 /**
@@ -60,13 +60,10 @@ export async function find(
   const config = getBaseConfig();
   const queryConfig = createQueryConfig(query);
 
-  const response = await apiRequest<BlocketAdSearchResponse>(
-    config.apiBaseUrl,
-    {
-      query: remapQueryParams(queryConfig),
-      ...fetchOptions,
-    }
-  );
+  const response = await apiRequest<BlocketApiResponse>(config.apiBaseUrl, {
+    query: remapQueryParams(queryConfig),
+    ...fetchOptions,
+  });
 
   if (!response || !response.data || !Array.isArray(response.data)) {
     throw new Error(
