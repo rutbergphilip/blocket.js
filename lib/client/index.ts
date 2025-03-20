@@ -47,9 +47,10 @@ function remapQueryParams(
 
 /**
  * Find ads on Blocket based on query parameters.
+ * Automatically handles pagination if the API returns multiple pages of results.
  * @param query Blocket query parameters.
  * @param fetchOptions Additional fetch options.
- * @returns Array of Blocket ads.
+ * @returns Array of Blocket ads from all available pages.
  */
 export async function find(
   query: BlocketQueryConfig,
@@ -60,18 +61,69 @@ export async function find(
   const config = getBaseConfig();
   const queryConfig = createQueryConfig(query);
 
-  const response = await apiRequest<BlocketApiResponse>(config.apiBaseUrl, {
-    query: remapQueryParams(queryConfig),
-    ...fetchOptions,
+  const firstPageParams = remapQueryParams(queryConfig);
+  Object.assign(firstPageParams, {
+    page: 1,
   });
 
-  if (!response || !response.data || !Array.isArray(response.data)) {
+  const firstPageResponse = await apiRequest<BlocketApiResponse>(
+    config.apiBaseUrl,
+    {
+      query: firstPageParams,
+      ...fetchOptions,
+    }
+  );
+
+  if (
+    !firstPageResponse ||
+    !firstPageResponse.data ||
+    !Array.isArray(firstPageResponse.data)
+  ) {
     throw new Error(
-      `Unexpected Blocket API response structure, expected array of ads, got: ${typeof response?.data}`
+      `Unexpected Blocket API response structure, expected array of ads, got: ${typeof firstPageResponse?.data}`
     );
   }
 
-  return response.data;
+  // If only 1 page of results, return immediately
+  if (firstPageResponse.total_page_count <= 1) {
+    return firstPageResponse.data;
+  }
+
+  // Otherwise, fetch all remaining pages
+  const allAds = [...firstPageResponse.data];
+  const totalPages = firstPageResponse.total_page_count;
+
+  // Create an array of promises for remaining pages
+  const pagePromises = [];
+  for (let page = 2; page <= totalPages; page++) {
+    const pageParams = remapQueryParams(queryConfig);
+    Object.assign(pageParams, {
+      page,
+    });
+
+    const pagePromise = apiRequest<BlocketApiResponse>(config.apiBaseUrl, {
+      query: pageParams,
+      ...fetchOptions,
+    });
+
+    pagePromises.push(pagePromise);
+  }
+
+  // Wait for all pages to complete
+  const pageResponses = await Promise.all(pagePromises);
+
+  // Validate and collect results from all pages
+  for (const response of pageResponses) {
+    if (response && response.data && Array.isArray(response.data)) {
+      allAds.push(...response.data);
+    } else {
+      throw new Error(
+        `Unexpected Blocket API response structure in paginated results, expected array of ads`
+      );
+    }
+  }
+
+  return allAds;
 }
 
 /**
