@@ -50,24 +50,6 @@ import client from 'blocket.js';
 })();
 ```
 
-### Fetching All Results (Pagination)
-
-To fetch all listings across multiple pages instead of just the first page:
-
-```ts
-import client from 'blocket.js';
-
-(async () => {
-  try {
-    // The third parameter (true) enables automatic pagination
-    const allAds = await client.find({ query: 'macbook air' }, undefined, true);
-    console.log(`Found ${allAds.length} total listings`);
-  } catch (error) {
-    console.error('Error fetching ads:', error);
-  }
-})();
-```
-
 ### Advanced Usage
 
 #### Global Configuration
