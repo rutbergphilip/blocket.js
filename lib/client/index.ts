@@ -90,7 +90,7 @@ export async function find(
 
   const pagePromises = Array.from(
     { length: totalPages - 1 },
-    (_, i) => i + 2
+    (_, i) => i + 1
   ).map((page) => {
     const pageParams = {
       ...params,
@@ -103,8 +103,7 @@ export async function find(
   });
 
   for await (const response of pagePromises) {
-    // Prevent rate limiting by adding a delay between requests
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await new Promise((resolve) => setTimeout(resolve, 150));
 
     if (response && response.data && Array.isArray(response.data)) {
       allAds.push(...response.data);
