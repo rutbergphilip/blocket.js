@@ -61,15 +61,12 @@ export async function find(
   const config = getBaseConfig();
   const queryConfig = createQueryConfig(query);
 
-  const firstPageParams = remapQueryParams(queryConfig);
-  Object.assign(firstPageParams, {
-    page: 1,
-  });
+  const params = remapQueryParams(queryConfig);
 
   const firstPageResponse = await apiRequest<BlocketApiResponse>(
     config.apiBaseUrl,
     {
-      query: firstPageParams,
+      query: params,
       ...fetchOptions,
     }
   );
@@ -84,35 +81,29 @@ export async function find(
     );
   }
 
-  // If only 1 page of results, return immediately
   if (firstPageResponse.total_page_count <= 1) {
     return firstPageResponse.data;
   }
 
-  // Otherwise, fetch all remaining pages
   const allAds = [...firstPageResponse.data];
   const totalPages = firstPageResponse.total_page_count;
 
-  // Create an array of promises for remaining pages
   const pagePromises = [];
   for (let page = 2; page <= totalPages; page++) {
-    const pageParams = remapQueryParams(queryConfig);
-    Object.assign(pageParams, {
+    Object.assign(params, {
       page,
     });
 
     const pagePromise = apiRequest<BlocketApiResponse>(config.apiBaseUrl, {
-      query: pageParams,
+      query: params,
       ...fetchOptions,
     });
 
     pagePromises.push(pagePromise);
   }
 
-  // Wait for all pages to complete
   const pageResponses = await Promise.all(pagePromises);
 
-  // Validate and collect results from all pages
   for (const response of pageResponses) {
     if (response && response.data && Array.isArray(response.data)) {
       allAds.push(...response.data);
