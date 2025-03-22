@@ -88,23 +88,24 @@ export async function find(
   const allAds = [...firstPageResponse.data];
   const totalPages = firstPageResponse.total_page_count;
 
-  const pagePromises = [];
-  for (let page = 2; page <= totalPages; page++) {
-    Object.assign(params, {
+  const pagePromises = Array.from(
+    { length: totalPages - 1 },
+    (_, i) => i + 2
+  ).map((page) => {
+    const pageParams = {
+      ...params,
       page,
-    });
-
-    const pagePromise = apiRequest<BlocketApiResponse>(config.apiBaseUrl, {
-      query: params,
+    };
+    return apiRequest<BlocketApiResponse>(config.apiBaseUrl, {
+      query: pageParams,
       ...fetchOptions,
     });
+  });
 
-    pagePromises.push(pagePromise);
-  }
+  for await (const response of pagePromises) {
+    // Prevent rate limiting by adding a delay between requests
+    await new Promise((resolve) => setTimeout(resolve, 200));
 
-  const pageResponses = await Promise.all(pagePromises);
-
-  for (const response of pageResponses) {
     if (response && response.data && Array.isArray(response.data)) {
       allAds.push(...response.data);
     } else {
