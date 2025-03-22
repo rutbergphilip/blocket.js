@@ -6,8 +6,8 @@ import type {
   BlocketQueryParamsNative,
   BlocketAd,
   BlocketAdResponse,
-  BlocketAdSearchResponse,
   BlocketQueryConfig,
+  BlocketApiResponse,
 } from '../types';
 
 /**
@@ -47,9 +47,10 @@ function remapQueryParams(
 
 /**
  * Find ads on Blocket based on query parameters.
+ * Automatically handles pagination if the API returns multiple pages of results.
  * @param query Blocket query parameters.
  * @param fetchOptions Additional fetch options.
- * @returns Array of Blocket ads.
+ * @returns Array of Blocket ads from all available pages.
  */
 export async function find(
   query: BlocketQueryConfig,
@@ -60,21 +61,60 @@ export async function find(
   const config = getBaseConfig();
   const queryConfig = createQueryConfig(query);
 
-  const response = await apiRequest<BlocketAdSearchResponse>(
+  const params = remapQueryParams(queryConfig);
+
+  const firstPageResponse = await apiRequest<BlocketApiResponse>(
     config.apiBaseUrl,
     {
-      query: remapQueryParams(queryConfig),
+      query: params,
       ...fetchOptions,
     }
   );
 
-  if (!response || !response.data || !Array.isArray(response.data)) {
+  if (
+    !firstPageResponse ||
+    !firstPageResponse.data ||
+    !Array.isArray(firstPageResponse.data)
+  ) {
     throw new Error(
-      `Unexpected Blocket API response structure, expected array of ads, got: ${typeof response?.data}`
+      `Unexpected Blocket API response structure, expected array of ads, got: ${typeof firstPageResponse?.data}`
     );
   }
 
-  return response.data;
+  if (firstPageResponse.total_page_count <= 1) {
+    return firstPageResponse.data;
+  }
+
+  const allAds = [...firstPageResponse.data];
+  const totalPages = firstPageResponse.total_page_count;
+
+  const pagePromises = [];
+  for (let page = 2; page <= totalPages; page++) {
+    Object.assign(params, {
+      page,
+    });
+
+    const pagePromise = apiRequest<BlocketApiResponse>(config.apiBaseUrl, {
+      query: params,
+      ...fetchOptions,
+    });
+
+    pagePromises.push(pagePromise);
+  }
+
+  const pageResponses = await Promise.all(pagePromises);
+
+  for (const response of pageResponses) {
+    if (response && response.data && Array.isArray(response.data)) {
+      allAds.push(...response.data);
+    } else {
+      throw new Error(
+        `Unexpected Blocket API response structure in paginated results, expected array of ads`
+      );
+    }
+  }
+
+  return allAds;
 }
 
 /**

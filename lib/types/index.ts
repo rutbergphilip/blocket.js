@@ -10,17 +10,29 @@ export type BlocketAccessToken = {
 };
 
 /**
- * Blocket API response containing an array of ads.
- */
-export interface BlocketAdSearchResponse {
-  data: BlocketAd[];
-}
-
-/**
  * Blocket API response containing a single ad.
  */
 export interface BlocketAdResponse {
   data: BlocketAd;
+}
+
+/**
+ * Blocket API response containing an array of ads with additional metadata.
+ */
+export interface BlocketApiResponse {
+  data: BlocketAd[];
+  gallery: unknown[];
+  inventory: Record<string, unknown>;
+  next_scroll_block: number;
+  next_scroll_id: string;
+  non_shipping_count: number;
+  query_signature: string;
+  saveable: boolean;
+  selected_values: string;
+  share_url: string;
+  title: string;
+  total_count: number;
+  total_page_count: number;
 }
 
 /**

@@ -14,6 +14,7 @@ blocket.js is a lightweight and easy-to-use npm package that provides a TypeScri
 - **Configurable**: Global and per-request configuration options let you override API endpoints, logging preferences, retry attempts, and more.
 - **TypeScript Support**: Fully typed interfaces for query parameters, API responses, and advertisements.
 - **Robust Error Handling & Logging**: Automatic retries on token expiry with configurable logging to assist in debugging.
+- **Automatic Pagination**: Seamlessly fetches all results across multiple pages without any additional configuration.
 
 ## Installation
 
@@ -40,8 +41,9 @@ import client from 'blocket.js';
 
 (async () => {
   try {
+    // This automatically fetches all results across all pages
     const ads = await client.find({ query: 'macbook air' });
-    console.log(ads);
+    console.log(`Found ${ads.length} total listings`);
   } catch (error) {
     console.error('Error fetching ads:', error);
   }
@@ -99,19 +101,19 @@ import client from 'blocket.js';
 
 `client.find(query: BlocketQueryConfig, fetchOptions?: FetchOptions<'json', any>): Promise<BlocketAd[]>`
 
-Searches for ads on Blocket based on the provided query parameters.
+Searches for ads on Blocket based on the provided query parameters. Automatically handles pagination to return all matching listings across all pages.
 
 - Parameters:
   - `query`: An object conforming to the `BlocketQueryConfig` interface:
     - `query` (string): The search query (e.g., `'macbook air'`).
-    - `limit` (number, optional): Maximum number of results to return (default: 20).
+    - `limit` (number, optional): Maximum number of results to return per page (default: 20).
     - `sort` (string, optional): Sorting order (default: `'rel'`).
     - `listingType` (string, optional): Listing type; `'s'` for selling, `'b'` for buying (default: `'s'`).
     - `status` (string, optional): Ad status (`'active'` or `'inactive'`, default: `'active'`).
     - `geolocation` (number, optional): Maximum distance in kilometers.
     - `include` (string, optional): Additional filters or fields to include (e.g., 'extend_with_shipping').
   - `fetchOptions` (optional): Additional options to pass to the underlying fetch request.
-- Returns: A promise that resolves to an array of `BlocketAd` objects.
+- Returns: A promise that resolves to an array of `BlocketAd` objects from all available pages.
 
 `client.findById(adId: string, fetchOptions?: FetchOptions<'json', any>): Promise<BlocketAd>`
 
