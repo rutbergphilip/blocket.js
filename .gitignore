@@ -5,3 +5,7 @@ dist/
 tsconfig.tsbuildinfo
 
 .npmrc
+
+# Claude
+CLAUDE.md
+.claude/
