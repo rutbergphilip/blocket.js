@@ -19,18 +19,30 @@ export async function apiRequest<T>(
   const token = await fetchToken();
 
   try {
-    return await ofetch<T>(url, {
+    const response = await ofetch<T>(url, {
       ...options,
       headers: {
+        'Accept': 'application/json',
+        'Accept-Language': 'sv-SE,sv;q=0.9,en;q=0.8',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Connection': 'keep-alive',
+        'Referer': 'https://www.blocket.se/',
         ...options.headers,
         Authorization: `Bearer ${token}`,
       },
     });
+
+    return response;
   } catch (error: any) {
-    if (error?.data?.status_code === 401 && retryCount < config.retryAttempts) {
+    // Enhanced error handling for HTTP status codes
+    if (error?.status >= 400) {
+      logger('error', `HTTP ${error.status}: ${error.statusText || 'Request failed'}`);
+    }
+
+    if ((error?.status === 401 || error?.data?.status_code === 401) && retryCount < config.retryAttempts) {
       logger(
         'info',
-        `Token expired. Retrying request (${retryCount + 1}/${
+        `Token expired (${error.status}). Retrying request (${retryCount + 1}/${
           config.retryAttempts
         }).`
       );

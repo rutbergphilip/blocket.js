@@ -40,7 +40,11 @@
     "build"
   ],
   "dependencies": {
-    "ofetch": "^1.4.1"
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^24.5.0",
+    "ofetch": "^1.4.1",
+    "playwright": "^1.55.0",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "pre-push": "^0.1.4",

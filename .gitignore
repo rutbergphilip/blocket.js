@@ -9,3 +9,5 @@ tsconfig.tsbuildinfo
 # Claude
 CLAUDE.md
 .claude/
+
+analysis/

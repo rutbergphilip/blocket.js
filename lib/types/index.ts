@@ -42,25 +42,46 @@ export interface BlocketAd {
   ad_id: string;
   ad_status: 'active' | 'inactive' | string;
   advertiser: {
-    account_id: string;
-    contact_methods: Record<string, any>;
+    account_id?: string;
+    contact_methods: {
+      phone: boolean;
+      sms: boolean;
+    };
     name: string;
-    public_profile: Record<string, any>;
-    type: 'private' | 'business';
+    public_profile?: Record<string, any>;
+    store_name?: string; // For business listings
+    type: 'private' | 'business' | 'store';
   };
   body: string;
-  category: Record<string, any>[];
-  co2_text: string;
-  images: Record<string, any>[];
+  category: Array<{
+    id: string;
+    name: string;
+  }>;
+  co2_text?: string;
+  images: Array<{
+    height: number;
+    type: string;
+    url: string;
+    width: number;
+  }>;
+  infopage?: {
+    text: string;
+    url: string;
+  }; // External links for businesses
   list_id: string;
   list_time: string; // ISO date string
-  location: Record<string, any>[];
+  location: Array<{
+    id: string;
+    name: string;
+    parent_id?: string;
+  }>;
   map_url: string;
-  parameter_groups: Record<string, any>[];
-  parameters_raw: {
-    is_shipping_buy_now_enabled: Record<string, any>;
-    shipping_enabled: Record<string, any>;
+  parameter_groups?: Record<string, any>[];
+  parameters_raw?: {
+    is_shipping_buy_now_enabled?: Record<string, any>;
+    shipping_enabled?: Record<string, any>;
   };
+  partner_info?: any;
   price: {
     suffix: string;
     value: number;

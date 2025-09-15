@@ -44,7 +44,7 @@ export interface BlocketQueryConfig {
   /**
    * The sorting order of the results.
    */
-  sort?: 'rel';
+  sort?: 'rel' | 'date' | 'price_asc' | 'price_desc';
   /**
    * The type of listing to search for. `s` for selling, `b` for buying, `a` for all.
    * @default 's'
@@ -54,7 +54,7 @@ export interface BlocketQueryConfig {
    * The status of the ad. `active`, `inactive`, or `all`.
    * @default 'active'
    */
-  status?: 'active' | 'deleted' | 'hidden_by_user';
+  status?: 'active' | 'deleted' | 'hidden_by_user' | 'all';
   /**
    * The maximum distance in kilometers from the search location.
    */
@@ -63,6 +63,10 @@ export interface BlocketQueryConfig {
    * Additional filters or fields to include in the response.
    */
   include?: 'extend_with_shipping' | string;
+  /**
+   * Page number for pagination (starts from 1).
+   */
+  page?: number;
 }
 
 /**
@@ -71,9 +75,10 @@ export interface BlocketQueryConfig {
 export interface BlocketQueryParamsNative {
   q: string;
   lim?: number;
-  sort?: 'rel';
+  sort?: 'rel' | 'date' | 'price_asc' | 'price_desc';
   st?: 's' | 'b' | 'a';
-  status?: 'active' | 'deleted' | 'hidden_by_user';
+  status?: 'active' | 'deleted' | 'hidden_by_user' | 'all';
   gl?: number;
   include?: string;
+  page?: number;
 }

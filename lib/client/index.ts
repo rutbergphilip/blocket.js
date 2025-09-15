@@ -29,6 +29,7 @@ function remapQueryParams(
     status: 'status',
     geolocation: 'gl',
     include: 'include',
+    page: 'page',
   };
 
   const remapped: Partial<BlocketQueryParamsNative> = {};
@@ -88,22 +89,17 @@ export async function find(
   const allAds = [...firstPageResponse.data];
   const totalPages = firstPageResponse.total_page_count;
 
-  const pagePromises = Array.from(
-    { length: totalPages - 1 },
-    (_, i) => i + 1
-  ).map((page) => {
+  // Optimized pagination: Direct page parameter requests without delay
+  for (let page = 2; page <= totalPages; page++) {
     const pageParams = {
       ...params,
       page,
     };
-    return apiRequest<BlocketApiResponse>(config.apiBaseUrl, {
+
+    const response = await apiRequest<BlocketApiResponse>(config.apiBaseUrl, {
       query: pageParams,
       ...fetchOptions,
     });
-  });
-
-  for await (const response of pagePromises) {
-    await new Promise((resolve) => setTimeout(resolve, 150));
 
     if (response && response.data && Array.isArray(response.data)) {
       allAds.push(...response.data);

@@ -34,7 +34,16 @@ export const fetchToken = async (
 
   const config = getBaseConfig();
 
-  const tokenData = await ofetch<BlocketAccessToken>(config.tokenEndpoint);
+  const tokenData = await ofetch<BlocketAccessToken>(config.tokenEndpoint, {
+    headers: {
+      'Accept': 'application/json',
+      'Accept-Language': 'sv-SE,sv;q=0.9,en;q=0.8',
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Connection': 'keep-alive',
+      'Referer': 'https://www.blocket.se/',
+    },
+  });
+
   if (!tokenData || !tokenData.bearerToken) {
     throw new Error('Failed to retrieve Blocket API token.');
   }
