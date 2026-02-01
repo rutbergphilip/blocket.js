@@ -26,6 +26,9 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Setup npm registry
+        run: echo "registry=https://registry.npmjs.org/" > ~/.npmrc
+
       - name: Publish to npm with provenance
         run: npm publish --provenance --access public
 
