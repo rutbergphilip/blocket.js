@@ -1,131 +1,229 @@
 # blocket.js
 
-blocket.js is a lightweight and easy-to-use npm package that provides a TypeScript interface to the unofficial Blocket API. It allows you to search and retrieve ads from blocket.se with automatic token management and error handling, so you can focus on building your application without worrying about the underlying API token management.
+A lightweight TypeScript/JavaScript client for searching ads on [Blocket.se](https://blocket.se) - Sweden's largest marketplace.
 
-![NPM Version](https://img.shields.io/npm/v/blocket.js)
-![NPM Downloads](https://img.shields.io/npm/dm/blocket.js)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/rutbergphilip/blocket.js/publish.yaml)
-![NPM Unpacked Size](https://img.shields.io/npm/unpacked-size/blocket.js)
+[![npm version](https://img.shields.io/npm/v/blocket.js)](https://www.npmjs.com/package/blocket.js)
+[![npm downloads](https://img.shields.io/npm/dm/blocket.js)](https://www.npmjs.com/package/blocket.js)
+[![build status](https://img.shields.io/github/actions/workflow/status/rutbergphilip/blocket.js/publish.yml)](https://github.com/rutbergphilip/blocket.js/actions)
+[![license](https://img.shields.io/npm/l/blocket.js)](https://github.com/rutbergphilip/blocket.js/blob/main/LICENSE)
 
 ## Features
 
-- **Simple API**: Import the client and call methods like `find` directly.
-- **Automatic Token Management**: Handles token retrieval, caching, and refreshing automatically when a token expires (detected via 401 errors).
-- **Configurable**: Global and per-request configuration options let you override API endpoints, logging preferences, retry attempts, and more.
-- **TypeScript Support**: Fully typed interfaces for query parameters, API responses, and advertisements.
-- **Robust Error Handling & Logging**: Automatic retries on token expiry with configurable logging to assist in debugging.
-- **Automatic Pagination**: Seamlessly fetches all results across multiple pages without any additional configuration.
+- **Simple API** - Just import and search, no setup required
+- **Automatic Pagination** - Fetches all results across multiple pages automatically
+- **TypeScript Support** - Fully typed interfaces for all responses
+- **Zero Configuration** - Works out of the box with sensible defaults
+- **Lightweight** - Minimal dependencies
 
 ## Installation
-
-Install blocket.js via npm:
 
 ```bash
 npm install blocket.js
 ```
 
-or using yarn:
-
 ```bash
 yarn add blocket.js
 ```
 
-## Usage
-
-### Basic Usage
-
-After installing the package, import the client and start using its methods immediately:
-
-```ts
-import client from 'blocket.js';
-
-(async () => {
-  try {
-    // This automatically fetches all results across all pages
-    const ads = await client.find({ query: 'macbook air' });
-    console.log(`Found ${ads.length} total listings`);
-  } catch (error) {
-    console.error('Error fetching ads:', error);
-  }
-})();
+```bash
+pnpm add blocket.js
 ```
 
-### Advanced Usage
+## Quick Start
 
-#### Global Configuration
+```typescript
+import client from 'blocket.js';
 
-Customize the package behavior with the global configuration. This allows you to override default values such as the API base URL, token endpoint, log level, and retry attempts.
+// Search for items
+const ads = await client.find({ query: 'iPhone 15' });
 
-```ts
-import client, { configure } from 'blocket.js';
-
-configure({
-  apiBaseUrl: 'https://api.blocket.se/search_bff/v2/content', // API base URL (default)
-  tokenEndpoint:
-    'https://www.blocket.se/api/adout-api-route/refresh-token-and-validate-session', // Token endpoint
-  logLevel: 'debug', // Options: 'none', 'error', 'info', 'debug'
-  retryAttempts: 3, // Maximum retry attempts on 401 errors
+console.log(`Found ${ads.length} ads`);
+ads.forEach(ad => {
+  console.log(`${ad.heading} - ${ad.price.amount} ${ad.price.currency_code}`);
 });
-
-(async () => {
-  try {
-    const ads = await client.find({ query: 'macbook air', limit: 10 });
-    console.log(ads);
-  } catch (error) {
-    console.error('Error fetching ads:', error);
-  }
-})();
-```
-
-#### Per Request Configuration
-
-You can also pass additional fetch options for individual requests to customize headers or other request parameters:
-
-```ts
-import client from 'blocket.js';
-
-(async () => {
-  try {
-    const ads = await client.find(
-      { query: 'macbook air', limit: 10 },
-      { headers: { 'Custom-Header': 'customValue' } }
-    );
-    console.log(ads);
-  } catch (error) {
-    console.error('Error fetching ads:', error);
-  }
-})();
 ```
 
 ## API Reference
 
-`client.find(query: BlocketQueryConfig, fetchOptions?: FetchOptions<'json', any>): Promise<BlocketAd[]>`
+### `client.find(query, options?)`
 
-Searches for ads on Blocket based on the provided query parameters. Automatically handles pagination to return all matching listings across all pages.
+Search for ads on Blocket. Automatically handles pagination to return all matching results.
 
-- Parameters:
-  - `query`: An object conforming to the `BlocketQueryConfig` interface:
-    - `query` (string): The search query (e.g., `'macbook air'`).
-    - `limit` (number, optional): Maximum number of results to return per page (default: 20).
-    - `sort` (string, optional): Sorting order (default: `'rel'`).
-    - `listingType` (string, optional): Listing type; `'s'` for selling, `'b'` for buying (default: `'s'`).
-    - `status` (string, optional): Ad status (`'active'` or `'inactive'`, default: `'active'`).
-    - `geolocation` (number, optional): Maximum distance in kilometers.
-    - `include` (string, optional): Additional filters or fields to include (e.g., 'extend_with_shipping').
-  - `fetchOptions` (optional): Additional options to pass to the underlying fetch request.
-- Returns: A promise that resolves to an array of `BlocketAd` objects from all available pages.
+```typescript
+const ads = await client.find({
+  query: 'macbook pro',      // Required: search term
+  limit: 50,                  // Results per page (default: 20, max: 60)
+  sort: 'price_asc',          // Sort order
+  listingType: 's',           // 's' = selling, 'b' = buying, 'a' = all
+  status: 'active',           // 'active', 'deleted', 'hidden_by_user', 'all'
+});
+```
 
-`client.findById(adId: string, fetchOptions?: FetchOptions<'json', any>): Promise<BlocketAd>`
+#### Query Options
 
-Retrieves a specific ad by its ID.
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `query` | `string` | *required* | Search term |
+| `limit` | `number` | `20` | Results per page (max 60) |
+| `sort` | `string` | `'rel'` | `'rel'`, `'date'`, `'price_asc'`, `'price_desc'` |
+| `listingType` | `string` | `'s'` | `'s'` (selling), `'b'` (buying), `'a'` (all) |
+| `status` | `string` | `'active'` | `'active'`, `'deleted'`, `'hidden_by_user'`, `'all'` |
+| `geolocation` | `number` | - | Max distance in km |
+| `include` | `string` | - | Additional fields (e.g., `'extend_with_shipping'`) |
 
-- Parameters:
-  - `adId`: The ID of the ad to retrieve.
-  - `fetchOptions` (optional): Additional options to pass to the underlying fetch request.
-- Returns: A promise that resolves to a `BlocketAd` object or null if not found.
+#### Returns
+
+Returns `Promise<BlocketAd[]>` - an array of ad objects.
+
+---
+
+### `client.findById(id)`
+
+Find a specific ad by its ID.
+
+```typescript
+const ad = await client.findById('12345678');
+
+if (ad) {
+  console.log(ad.heading);
+  console.log(ad.price.amount);
+}
+```
+
+#### Returns
+
+Returns `Promise<BlocketAd | null>` - the ad object or `null` if not found.
+
+---
+
+## Response Types
+
+### `BlocketAd`
+
+Each ad object contains:
+
+```typescript
+interface BlocketAd {
+  id: string;                    // Ad ID (string)
+  ad_id: number;                 // Ad ID (number)
+  heading: string;               // Ad title
+  location: string;              // Location name
+  canonical_url: string;         // Full URL to the ad
+
+  price: {
+    amount: number;              // Price value
+    currency_code: string;       // e.g., 'SEK'
+    price_unit: string;          // e.g., 'kr'
+  };
+
+  image: {                       // Primary image (or null)
+    url: string;
+    width: number;
+    height: number;
+  } | null;
+
+  image_urls: string[];          // All image URLs
+  timestamp: number;             // Unix timestamp
+  trade_type: string;            // e.g., 'Säljes'
+
+  coordinates?: {                // Location coordinates (if available)
+    lat: number;
+    lon: number;
+  };
+
+  labels: Array<{                // Ad labels/badges
+    id: string;
+    text: string;
+    type: 'PRIMARY' | 'SECONDARY';
+  }>;
+
+  flags: string[];               // e.g., ['private', 'shipping_exists']
+}
+```
+
+## Configuration
+
+Customize the client behavior using `configure()`:
+
+```typescript
+import client, { configure } from 'blocket.js';
+
+configure({
+  logLevel: 'debug',  // 'none' | 'error' | 'info' | 'debug'
+});
+```
+
+### Configuration Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `logLevel` | `string` | `'error'` | Logging verbosity |
+| `apiBaseUrl` | `string` | Blocket API | Override API endpoint |
+
+## Examples
+
+### Search with Sorting
+
+```typescript
+// Get cheapest items first
+const cheapest = await client.find({
+  query: 'playstation 5',
+  sort: 'price_asc',
+});
+
+// Get newest listings first
+const newest = await client.find({
+  query: 'playstation 5',
+  sort: 'date',
+});
+```
+
+### Filter by Location
+
+```typescript
+// Find items within 50km
+const nearby = await client.find({
+  query: 'bicycle',
+  geolocation: 50,
+});
+```
+
+### Process Results
+
+```typescript
+const ads = await client.find({ query: 'furniture' });
+
+// Filter by price
+const affordable = ads.filter(ad => ad.price.amount < 5000);
+
+// Get total value
+const totalValue = ads.reduce((sum, ad) => sum + ad.price.amount, 0);
+
+// Extract locations
+const locations = [...new Set(ads.map(ad => ad.location))];
+```
+
+### Error Handling
+
+```typescript
+import client from 'blocket.js';
+
+try {
+  const ads = await client.find({ query: 'laptop' });
+  console.log(`Found ${ads.length} ads`);
+} catch (error) {
+  console.error('Search failed:', error.message);
+}
+```
+
+## Disclaimer
+
+This is an **unofficial** package and is not affiliated with Blocket.se. Use responsibly and in accordance with Blocket's terms of service.
 
 ## License
 
-This project is licensed under the [MIT License](https://github.com/rutbergphilip/blocket.js/blob/main/LICENSE) – free for personal and commercial use.
+[MIT](https://github.com/rutbergphilip/blocket.js/blob/main/LICENSE) - free for personal and commercial use.
 
-If you find this project useful, crediting the author and contributing to the project is greatly appreciated!
+---
+
+**Found this useful?** Give it a ⭐ on [GitHub](https://github.com/rutbergphilip/blocket.js)!
