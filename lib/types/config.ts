@@ -4,25 +4,15 @@
 export interface BlocketConfig {
   /**
    * Base URL for the Blocket API.
-   * @default 'https://api.blocket.se/search_bff/v2/content'
+   * @default 'https://www.blocket.se/recommerce/forsale/search/api/search/SEARCH_ID_BAP_COMMON'
    */
   apiBaseUrl: string;
-  /**
-   * Endpoint URL to fetch the token.
-   * @default 'https://www.blocket.se/api/adout-api-route/refresh-token-and-validate-session'
-   */
-  tokenEndpoint: string;
   /**
    * Log level for debugging.
    * Options: 'none', 'error', 'info', 'debug'
    * @default 'error'
    */
   logLevel: 'none' | 'error' | 'info' | 'debug';
-  /**
-   * Maximum number of retry attempts on 401 error.
-   * @default 3
-   */
-  retryAttempts: number;
 }
 
 /**

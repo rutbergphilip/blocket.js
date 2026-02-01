@@ -5,7 +5,6 @@ import type { FetchOptions } from 'ofetch';
 import type {
   BlocketQueryParamsNative,
   BlocketAd,
-  BlocketAdResponse,
   BlocketQueryConfig,
   BlocketApiResponse,
 } from '../types';
@@ -74,20 +73,21 @@ export async function find(
 
   if (
     !firstPageResponse ||
-    !firstPageResponse.data ||
-    !Array.isArray(firstPageResponse.data)
+    !firstPageResponse.docs ||
+    !Array.isArray(firstPageResponse.docs)
   ) {
     throw new Error(
-      `Unexpected Blocket API response structure, expected array of ads, got: ${typeof firstPageResponse?.data}`
+      `Unexpected Blocket API response structure, expected array of ads, got: ${typeof firstPageResponse?.docs}`
     );
   }
 
-  if (firstPageResponse.total_page_count <= 1) {
-    return firstPageResponse.data;
+  const paging = firstPageResponse.metadata?.paging;
+  if (!paging || paging.last <= 1) {
+    return firstPageResponse.docs;
   }
 
-  const allAds = [...firstPageResponse.data];
-  const totalPages = firstPageResponse.total_page_count;
+  const allAds = [...firstPageResponse.docs];
+  const totalPages = paging.last;
 
   // Optimized pagination: Direct page parameter requests without delay
   for (let page = 2; page <= totalPages; page++) {
@@ -101,8 +101,8 @@ export async function find(
       ...fetchOptions,
     });
 
-    if (response && response.data && Array.isArray(response.data)) {
-      allAds.push(...response.data);
+    if (response && response.docs && Array.isArray(response.docs)) {
+      allAds.push(...response.docs);
     } else {
       throw new Error(
         `Unexpected Blocket API response structure in paginated results, expected array of ads`
@@ -115,22 +115,35 @@ export async function find(
 
 /**
  * Get details of a specific ad by its ID.
+ *
+ * Note: The Blocket API no longer provides a public endpoint for single ad lookups.
+ * This method searches for the ad and returns it if found.
+ *
  * @param adId Advertisement ID.
  * @param fetchOptions Additional fetch options.
- * @returns {Promise<BlocketAd | null>} Blocket ad details or null if not found.
+ * @returns {Promise<BlocketAd | null>} Blocket ad or null if not found.
  */
 export async function findById(
   adId: string,
   fetchOptions?: FetchOptions<'json', any>
 ): Promise<BlocketAd | null> {
   const config = getBaseConfig();
-  const url = `${config.apiBaseUrl}/${adId}`;
 
-  const ad = await apiRequest<BlocketAdResponse>(url, fetchOptions);
+  // Search with a generic query and filter by ID
+  // The API doesn't support direct ID lookup, so we use the ad ID as query
+  const response = await apiRequest<BlocketApiResponse>(config.apiBaseUrl, {
+    query: { q: adId, lim: 100 },
+    ...fetchOptions,
+  });
 
-  if (!ad || !ad?.data) {
+  if (!response || !response.docs) {
     return null;
   }
 
-  return ad.data;
+  // Find the exact ad by ID
+  const ad = response.docs.find(
+    (doc) => doc.id === adId || doc.ad_id === parseInt(adId, 10)
+  );
+
+  return ad || null;
 }

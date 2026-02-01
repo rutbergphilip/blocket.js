@@ -1,99 +1,76 @@
 export * from './config';
 
 /**
- * Access token.
+ * Blocket API response containing an array of ads with metadata.
  */
-export type BlocketAccessToken = {
-  user: null;
-  isLoggedIn: false;
-  bearerToken: string;
-};
-
-/**
- * Blocket API response containing a single ad.
- */
-export interface BlocketAdResponse {
-  data: BlocketAd;
+export interface BlocketApiResponse {
+  docs: BlocketAd[];
+  filters: unknown[];
+  metadata: BlocketMetadata;
 }
 
 /**
- * Blocket API response containing an array of ads with additional metadata.
+ * Blocket API metadata containing pagination and search info.
  */
-export interface BlocketApiResponse {
-  data: BlocketAd[];
-  gallery: unknown[];
-  inventory: Record<string, unknown>;
-  next_scroll_block: number;
-  next_scroll_id: string;
-  non_shipping_count: number;
-  query_signature: string;
-  saveable: boolean;
-  selected_values: string;
-  share_url: string;
+export interface BlocketMetadata {
+  params: Record<string, string[]>;
+  search_key: string;
+  selected_filters: unknown[];
+  num_results: number;
+  result_size: {
+    match_count: number;
+    group_count: number;
+  };
+  paging: {
+    param: string;
+    current: number;
+    last: number;
+  };
   title: string;
-  total_count: number;
-  total_page_count: number;
+  is_savable_search: boolean;
+  is_end_of_paging: boolean;
+  timestamp: number;
 }
 
 /**
  * Blocket advertisement object.
  */
 export interface BlocketAd {
-  ad_id: string;
-  ad_status: 'active' | 'inactive' | string;
-  advertiser: {
-    account_id?: string;
-    contact_methods: {
-      phone: boolean;
-      sms: boolean;
-    };
-    name: string;
-    public_profile?: Record<string, any>;
-    store_name?: string; // For business listings
-    type: 'private' | 'business' | 'store';
-  };
-  body: string;
-  category: Array<{
-    id: string;
-    name: string;
-  }>;
-  co2_text?: string;
-  images: Array<{
-    height: number;
-    type: string;
-    url: string;
-    width: number;
-  }>;
-  infopage?: {
-    text: string;
-    url: string;
-  }; // External links for businesses
-  list_id: string;
-  list_time: string; // ISO date string
-  location: Array<{
-    id: string;
-    name: string;
-    parent_id?: string;
-  }>;
-  map_url: string;
-  parameter_groups?: Record<string, any>[];
-  parameters_raw?: {
-    is_shipping_buy_now_enabled?: Record<string, any>;
-    shipping_enabled?: Record<string, any>;
-  };
-  partner_info?: any;
-  price: {
-    suffix: string;
-    value: number;
-  };
-  price_badge?: {
-    icon: Record<string, any>;
-    id: string;
-    label: string;
-  };
-  share_url: string;
-  state_id: string;
-  subject: string;
   type: string;
-  zipcode: string;
+  id: string;
+  ad_id: number;
+  main_search_key: string;
+  heading: string;
+  location: string;
+  image: {
+    url: string;
+    path: string;
+    height: number;
+    width: number;
+    aspect_ratio: number;
+  } | null;
+  image_urls: string[];
+  flags: string[];
+  timestamp: number;
+  coordinates?: {
+    lat: number;
+    lon: number;
+    accuracy: number;
+  };
+  ad_type: number;
+  labels: Array<{
+    id: string;
+    text: string;
+    type: 'PRIMARY' | 'SECONDARY' | string;
+  }>;
+  canonical_url: string;
+  extras: unknown[];
+  price: {
+    amount: number;
+    currency_code: string;
+    price_unit: string;
+  };
+  distance: number;
+  trade_type: string;
 }
+

@@ -4,11 +4,9 @@ import { BlocketQueryConfig, BlocketConfig } from '../types';
  * Default global configuration.
  */
 export const defaultConfig: BlocketConfig = {
-  apiBaseUrl: 'https://api.blocket.se/search_bff/v2/content',
-  tokenEndpoint:
-    'https://www.blocket.se/api/adout-api-route/refresh-token-and-validate-session',
+  apiBaseUrl:
+    'https://www.blocket.se/recommerce/forsale/search/api/search/SEARCH_ID_BAP_COMMON',
   logLevel: 'error',
-  retryAttempts: 3,
 };
 
 let currentConfig: BlocketConfig = { ...defaultConfig };
