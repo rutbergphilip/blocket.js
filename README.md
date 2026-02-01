@@ -50,12 +50,14 @@ ads.forEach(ad => {
 Search for ads on Blocket. Automatically handles pagination to return all matching results.
 
 ```typescript
+import { BlocketLocations, BlocketCategories } from 'blocket.js';
+
 const ads = await client.find({
-  query: 'macbook pro',      // Required: search term
-  limit: 50,                  // Results per page (default: 20, max: 60)
-  sort: 'price_asc',          // Sort order
-  listingType: 's',           // 's' = selling, 'b' = buying, 'a' = all
-  status: 'active',           // 'active', 'deleted', 'hidden_by_user', 'all'
+  query: 'macbook pro',                           // Required: search term
+  limit: 50,                                       // Results per page (default: 20, max: 60)
+  sort: 'PRICE_ASC',                              // Sort order
+  location: BlocketLocations.STOCKHOLM,           // Filter by region
+  category: BlocketCategories.ELEKTRONIK_OCH_VITVAROR, // Filter by category
 });
 ```
 
@@ -65,11 +67,11 @@ const ads = await client.find({
 |--------|------|---------|-------------|
 | `query` | `string` | *required* | Search term |
 | `limit` | `number` | `20` | Results per page (max 60) |
-| `sort` | `string` | `'rel'` | `'rel'`, `'date'`, `'price_asc'`, `'price_desc'` |
-| `listingType` | `string` | `'s'` | `'s'` (selling), `'b'` (buying), `'a'` (all) |
-| `status` | `string` | `'active'` | `'active'`, `'deleted'`, `'hidden_by_user'`, `'all'` |
-| `geolocation` | `number` | - | Max distance in km |
-| `include` | `string` | - | Additional fields (e.g., `'extend_with_shipping'`) |
+| `sort` | `string` | `'RELEVANCE'` | `'RELEVANCE'`, `'PRICE_ASC'`, `'PRICE_DESC'`, `'PUBLISHED_ASC'`, `'PUBLISHED_DESC'` |
+| `location` | `string \| string[]` | - | Filter by region (use `BlocketLocations` constants) |
+| `category` | `string` | - | Filter by main category (use `BlocketCategories` constants) |
+| `subCategory` | `string` | - | Filter by subcategory |
+| `page` | `number` | - | Page number for manual pagination |
 
 #### Returns
 
@@ -160,6 +162,54 @@ configure({
 | `logLevel` | `string` | `'error'` | Logging verbosity |
 | `apiBaseUrl` | `string` | Blocket API | Override API endpoint |
 
+## Constants
+
+### BlocketLocations
+
+Swedish regions for filtering:
+
+| Constant | Region |
+|----------|--------|
+| `BLEKINGE` | Blekinge |
+| `DALARNA` | Dalarna |
+| `GOTLAND` | Gotland |
+| `GAVLEBORG` | Gävleborg |
+| `HALLAND` | Halland |
+| `JAMTLAND` | Jämtland |
+| `JONKOPING` | Jönköping |
+| `KALMAR` | Kalmar |
+| `KRONOBERG` | Kronoberg |
+| `NORRBOTTEN` | Norrbotten |
+| `SKANE` | Skåne |
+| `STOCKHOLM` | Stockholm |
+| `SODERMANLAND` | Södermanland |
+| `UPPSALA` | Uppsala |
+| `VARMLAND` | Värmland |
+| `VASTERBOTTEN` | Västerbotten |
+| `VASTERNORRLAND` | Västernorrland |
+| `VASTMANLAND` | Västmanland |
+| `VASTRA_GOTALAND` | Västra Götaland |
+| `OREBRO` | Örebro |
+| `OSTERGOTLAND` | Östergötland |
+
+### BlocketCategories
+
+Main categories for filtering:
+
+| Constant | Category |
+|----------|----------|
+| `AFFARSVERKSAMHET` | Affärsverksamhet |
+| `DJUR_OCH_TILLBEHOR` | Djur & Tillbehör |
+| `ELEKTRONIK_OCH_VITVAROR` | Elektronik & Vitvaror |
+| `FORDONSTILLBEHOR` | Fordonstillbehör |
+| `FRITID_HOBBY_OCH_UNDERHALLNING` | Fritid, Hobby & Underhållning |
+| `FORALDRAR_OCH_BARN` | Föräldrar & Barn |
+| `KLADER_KOSMETIKA_OCH_ACCESSOARER` | Kläder, Kosmetika & Accessoarer |
+| `KONST_OCH_ANTIKT` | Konst & Antikt |
+| `MOBLER_OCH_INREDNING` | Möbler & Inredning |
+| `SPORT_OCH_FRITID` | Sport & Fritid |
+| `TRADGARD_OCH_RENOVERING` | Trädgård & Renovering |
+
 ## Examples
 
 ### Search with Sorting
@@ -168,23 +218,43 @@ configure({
 // Get cheapest items first
 const cheapest = await client.find({
   query: 'playstation 5',
-  sort: 'price_asc',
+  sort: 'PRICE_ASC',
 });
 
 // Get newest listings first
 const newest = await client.find({
   query: 'playstation 5',
-  sort: 'date',
+  sort: 'PUBLISHED_DESC',
 });
 ```
 
 ### Filter by Location
 
 ```typescript
-// Find items within 50km
-const nearby = await client.find({
+import { BlocketLocations } from 'blocket.js';
+
+// Find items in Stockholm
+const stockholm = await client.find({
   query: 'bicycle',
-  geolocation: 50,
+  location: BlocketLocations.STOCKHOLM,
+});
+
+// Find items in multiple regions
+const southern = await client.find({
+  query: 'bicycle',
+  location: [BlocketLocations.SKANE, BlocketLocations.BLEKINGE],
+});
+```
+
+### Filter by Category
+
+```typescript
+import { BlocketCategories } from 'blocket.js';
+
+// Find electronics
+const electronics = await client.find({
+  query: 'laptop',
+  category: BlocketCategories.ELEKTRONIK_OCH_VITVAROR,
 });
 ```
 

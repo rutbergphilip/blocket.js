@@ -4,6 +4,20 @@ export default client;
 import { configure } from './config';
 export { configure };
 
-import type { BlocketQueryConfig } from './types/config';
+import { BlocketLocations, BlocketCategories } from './types/config';
+export { BlocketLocations, BlocketCategories };
+
+import type {
+  BlocketQueryConfig,
+  BlocketSortOrder,
+  BlocketLocation,
+  BlocketCategory,
+} from './types/config';
 import type { BlocketAd } from './types';
-export type { BlocketQueryConfig, BlocketAd };
+export type {
+  BlocketQueryConfig,
+  BlocketSortOrder,
+  BlocketLocation,
+  BlocketCategory,
+  BlocketAd,
+};

@@ -44,8 +44,8 @@ export const logger = (
  * Default query configuration (excluding the required query string).
  */
 export const defaultQueryConfig: Omit<BlocketQueryConfig, 'query'> = {
-  listingType: 's',
-  status: 'active',
+  limit: 20,
+  sort: 'RELEVANCE',
 };
 
 /**

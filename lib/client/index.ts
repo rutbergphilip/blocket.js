@@ -24,10 +24,9 @@ function remapQueryParams(
     query: 'q',
     limit: 'lim',
     sort: 'sort',
-    listingType: 'st',
-    status: 'status',
-    geolocation: 'gl',
-    include: 'include',
+    location: 'location',
+    category: 'category',
+    subCategory: 'sub_category',
     page: 'page',
   };
 
